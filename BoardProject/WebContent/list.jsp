@@ -47,8 +47,8 @@
          <th width="350">제목</th>
          <th width="150">작성자</th>
          <th width="150">작성일</th>
-         <th width="100">조회수ssf</th>    
-
+         <th width="100">조회수</th>    
+	왜 안돼 짜증나게jjkjklkl
       </tr>
       <c:forEach var="board" items="${listModel.list}">
       <tr height="30">
