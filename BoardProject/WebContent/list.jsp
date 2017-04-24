@@ -47,8 +47,8 @@
          <th width="350">제목</th>
          <th width="150">작성자</th>
          <th width="150">작성일</th>
-         <th width="100">조회수</th>    
-         엿     엿 영ㅅ여매넝라ㅣㅇ널아
+         <th width="100">조회수ss</th>    
+
       </tr>
       <c:forEach var="board" items="${listModel.list}">
       <tr height="30">
