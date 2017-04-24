@@ -8,7 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
+	왜 안돼 짜증나게jjkjklkl
 <%
 	request.setCharacterEncoding("utf-8");
 
@@ -48,7 +48,7 @@
          <th width="150">작성자</th>
          <th width="150">작성일</th>
          <th width="100">조회수</th>    
-	왜 안돼 짜증나게jjkjklkl
+
       </tr>
       <c:forEach var="board" items="${listModel.list}">
       <tr height="30">
