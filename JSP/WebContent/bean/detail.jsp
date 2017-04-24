@@ -25,7 +25,7 @@
  	<li>제목 : <%= board.getTitle() %></li>
  	<li>작성자 : <%= board.getWriter() %></li>
  	<li>내용 : <%= board.getContents() %></li>
- 
+ ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ
  
  </ul>
 </body>
