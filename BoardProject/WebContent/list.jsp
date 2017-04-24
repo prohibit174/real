@@ -42,6 +42,7 @@
 			<th width="150">작성자</th>
 			<th width="150">작성일</th>
 			<th width="100">조회수</th>			
+			asdfsdfasdfasdfasdf
 		</tr>
 		<c:forEach var="board" items="${listModel.list}">
 		<tr height="30">
