@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Board">
+	<typeAlias alias="Board" type="kosta.model.Board"/>
+	<typeAlias alias="Search" type="kosta.model.Search"/>
+	<insert id="insertBoard" parameterClass="Board">
+		insert into board(
+			seq, title, writer, contents, regdate, hitcount
+		)
+		values(
+			board_seq.nextval, #title#, #writer#, #contents#, sysdate, 0
+		)
+		
+	</insert>
+	
+	<select id="listBoard" resultClass="Board" parameterClass="Search">
+		select * from board
+		<dynamic prepend="where"><!-- 동적으로 알아서 where 절을 만들기 위해서 -->
+			<isNotNull property="area">
+				<iterate property="area" conjunction="or" open="(" close=")">
+					$area[]$ LIKE #searchKey#
+				</iterate>
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<update id="updateBoard" parameterClass="Board">
+		update board set writer = #writer#, title = #title# where seq = #seq#   
+	</update>
+	
+	<select id="detailBoard" parameterClass="int" resultClass="Board">
+      select * from board where seq = #seq#   
+   </select>
+</sqlMap>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

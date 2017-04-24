@@ -1,0 +1,73 @@
+package kosta.model;
+
+import java.io.InputStream;
+import java.util.List;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+import kosta.mapper.BoardMapper;
+
+public class BoardDao {
+	public static BoardDao dao = new BoardDao();
+	public static BoardDao getInstance(){
+		return dao;
+	}
+	
+	public SqlSessionFactory getSqlSessionFactory(){
+		String resource = "mybatis-config.xml";
+		InputStream input = null;
+		
+		try {
+			input = Resources.getResourceAsStream(resource);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new SqlSessionFactoryBuilder().build(input);
+	}
+	
+	public int insertBoard(Board board){
+		int re = -1;
+		SqlSession sqlsession = getSqlSessionFactory().openSession();		
+		try {
+			re = sqlsession.getMapper(BoardMapper.class).insertBoard(board);
+			if(re > 0){
+				sqlsession.commit();
+			}else{
+				sqlsession.rollback();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			sqlsession.close();
+		}
+		return re;
+	}
+	
+
+		public int selectB_id(){
+			SqlSession sqlsession = getSqlSessionFactory().openSession();
+			try {
+				if(sqlsession.getMapper(BoardMapper.class).selectB_id() == null){
+					return 0;
+				}else{
+					return sqlsession.getMapper(BoardMapper.class).selectB_id();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
+		}
+		
+		public List<Board> listBoard(){
+			SqlSession sqlSession = getSqlSessionFactory().openSession();
+			List<Board> list = null;
+			try {
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+}

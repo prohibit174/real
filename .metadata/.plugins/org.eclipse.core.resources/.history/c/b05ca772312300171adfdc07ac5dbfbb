@@ -1,0 +1,31 @@
+package kosta.action;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import kosta.model.Board;
+import kosta.model.BoardDao;
+
+public class insertAction implements Action {
+
+	@Override
+	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException  {
+		BoardDao dao = BoardDao.getInstance();
+		Board board = new Board();
+		board.setTitle(request.getParameter("title"));
+		board.setWriter(request.getParameter("writer"));
+		board.setContents(request.getParameter("contents"));
+		
+		dao.insertBoard(board);
+		
+		ActionForward forward = new ActionForward();
+		forward.setRedirect(false);
+		forward.setPath("/listAction.do");
+		
+		return null;
+	}
+
+}

@@ -1,0 +1,14 @@
+package kosta.model;
+
+import org.apache.ibatis.session.SqlSessionFactory;
+
+public class BoardDao {
+	public static BoardDao dao = new BoardDao();
+	public static BoardDao getInstance(){
+		return dao;
+	}
+	
+	public SqlSessionFactory getSqlSessionFactory(){
+		String resource = "mybatis-config.xml";
+	}
+}

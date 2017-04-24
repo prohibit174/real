@@ -1,0 +1,139 @@
+package kosta.model;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
+
+public class BoardService {
+	private static BoardService service = new BoardService();
+	private static BoardDao dao;
+	private static final int PAGE_SIZE = 2;
+	
+	public static BoardService getInstance(){
+		dao = BoardDao.getInstance();
+		return service;
+	}
+	public int insertBoardService(HttpServletRequest request) throws Exception{
+		Board board = new Board();
+		//파일 업로드 (경로, 크기, 인코딩, 중첩 정책)
+		String uploadPath = request.getRealPath("upload");
+		int size = 20 * 1024 * 1024; //20MB
+		
+		MultipartRequest multi = new MultipartRequest(request, uploadPath, size, "utf-8", new DefaultFileRenamePolicy());
+		
+		board.setB_name(multi.getParameter("b_name"));
+		board.setB_title(multi.getParameter("b_title"));
+		board.setB_content(multi.getParameter("b_content"));
+		board.setB_pwd(multi.getParameter("b_pwd"));
+		
+		board.setB_id(Integer.parseInt(multi.getParameter("b_id")));
+		board.setB_ref(Integer.parseInt(multi.getParameter("b_ref")));
+		board.setB_step(Integer.parseInt(multi.getParameter("b_step")));
+		board.setB_level(Integer.parseInt(multi.getParameter("b_level")));
+		
+		//파일 업로드
+		if(multi.getFilesystemName("b_fname") != null){
+			String b_fname = multi.getFilesystemName("b_fname");
+			board.setB_fname(b_fname);
+			//썸네일 이미지(jpg, gif) aaa.gif => aaa_small.gif
+			String pattern = b_fname.substring(b_fname.lastIndexOf(".") + 1); // gif 뽑기
+			String headName = b_fname.substring(0, b_fname.lastIndexOf(".")); // aaa 뽑기
+			
+			//원본 File 객체
+			String imagePath = uploadPath + "\\" + b_fname;
+			File src = new File(imagePath);
+			
+			//썸네일 이미지 경로 => File 객체
+			String thumImagePath = uploadPath + "\\" + headName + "_small." + pattern;
+			File dest = new File(thumImagePath);
+			
+			if(pattern.equals("jpg") || pattern.equals("gif")){
+				ImageUtil.resize(src, dest, 100, ImageUtil.RATIO);
+			}
+		}else{
+			board.setB_fname("");
+		}
+		
+		//답변 글일 때
+		if(board.getB_id() != 0){
+			HashMap<String, Integer> map = new HashMap<String, Integer>();
+			map.put("b_step", board.getB_step());
+			map.put("b_ref", board.getB_ref());
+			
+			dao.updateStep(map);
+			
+			board.setB_id(dao.selectB_id() + 1); // 새로운 id
+			board.setB_step(board.getB_step() + 1); // 나의 b_ref
+			board.setB_level(board.getB_level() + 1);
+		}else{ // 원본글일 때
+			board.setB_id(dao.selectB_id() + 1); // 새로운 id
+			board.setB_ref(dao.selectB_id() + 1); // 나의 b_ref
+		}
+		return dao.insertBoard(board);
+	}
+
+	
+	public ListModel listBoardService(HttpServletRequest request, int requestPage){
+		Search search = new Search();
+		HttpSession session = request.getSession();
+		//검색 되었을 때 다른 페이지 누르면 검색하지 않은 것도 나온다 그것을 방지 하기 위해서 세션을 사용함.
+		//기존에 검색된 내용을 삭제 
+		if(request.getParameter("temp") != null){
+			session.removeAttribute("search");
+		}
+		//검색 시 
+		if(request.getParameterValues("area") != null){
+			search.setArea(request.getParameterValues("area"));
+			search.setSearchKey("%" + request.getParameter("searchKey") + "%");
+			session.setAttribute("search", search);
+		}else if((Search)session.getAttribute("search") != null){
+			//검색 후 페이징 처리 클릭
+			search = (Search)session.getAttribute("search");
+			// 그 검색된 search 를 계속적으로 활용할수 있게끔..
+		}
+		// 페이지당 글 개수, 총 글개수, 총 페이지 수, 시작 페이지와 끝 페이지, 현재 페이지
+		// 총 글개수를 먼저 구해야만 총 페이지 수를 구할 수 있기 때문에 총 글개수 구하기
+		int totalCount = dao.countBoard(search);
+		int totalPageCount = totalCount/PAGE_SIZE;
+		if(totalCount%PAGE_SIZE > 0){
+			//나머지가 있으면...
+			totalPageCount++;
+			//토탈페이지를 1을 증가 시켜줌.
+		}
+		//현재 페이지에 의해서 시작과 끝 페이지가 결정된다 (아래 공식...)
+		//현재 페이지 - (현재페이지-1)%5
+		int startPage = requestPage - (requestPage -1) % 5;
+		int endPage = startPage + 4;
+		if(endPage > totalPageCount){
+			endPage = totalPageCount;
+		}
+		
+		//startRow = (현재페이지 -1) * 페이지당 글 개수
+		int startRow = (requestPage -1) * PAGE_SIZE;
+		//여기 글번호 부터 보여주세요라고 dao 에게 요청
+		List<Board> list = dao.listBoard(startRow, search);
+		return new ListModel(list, requestPage, totalCount, startPage, endPage);
+	}
+	
+
+	 public Board selectBoardService(int b_id, boolean answer){
+		 //조회수
+	      if(answer == false){      
+	    	 dao.updateHit(b_id);
+	      }
+	      return dao.selectBoard(b_id);
+	   }
+	 
+		public int updateCheckService(Board board){
+			return  dao.updateCheck(board);
+		}
+		public int updateBoardService(Board board){
+			return  dao.updateBoard(board);
+		}
+}

@@ -1,0 +1,8 @@
+package kosta.mapper;
+
+import kosta.model.Board;
+
+public interface BoardMapper {
+	public int insertBoard(Board board);
+	public Integer selectB_id();
+}

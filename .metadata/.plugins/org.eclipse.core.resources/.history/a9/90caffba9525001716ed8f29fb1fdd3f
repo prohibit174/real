@@ -1,0 +1,11 @@
+package kosta.model;
+
+import java.io.Serializable;
+
+public class Reply implements Serializable{
+	private int r_num;
+	private String r_title;
+	private String r_writer;
+	private String r_content;
+	private int b_id;
+}

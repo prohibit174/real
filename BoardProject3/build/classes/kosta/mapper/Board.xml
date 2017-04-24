@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="kosta.mapper.BoardMapper">
+	<cache />
+
+	<insert id="insertBoard" parameterType="Board">
+		insert into board2(
+			b_id, b_name, b_title, b_content, b_pwd, b_hit, b_date, b_ref, b_step, b_level
+		)
+		values(
+		 #{b_id}, #{b_name}, #{b_title}, #{b_content}, #{b_pwd}, 0, SYSDATE, #{b_ref}, #{b_step}, #{b_level}
+		)
+	</insert>
+	
+	<select id = "selectB_id" resultType="integer">
+		select max(b_id) from board2 
+	</select>
+
+	<select id="listBoard" resultType="Board">
+		select * from board2 order by b_ref desc,b_step asc
+	</select>
+	
+	<select id="selectBoard" parameterType="int" resultType="Board">
+		select * from board2 where b_id = #{b_id}
+	</select>
+	
+	<update id="updateHitBoard" parameterType="int">
+		update board2 set b_hit = b_hit + 1 where b_id = #{b_id}
+	</update>
+	
+	<update id="updateStep" parameterType="java.util.HashMap">
+		update board2 set b_step = b_step + 1  where b_ref = #{b_ref} and b_step > #{b_step}
+	</update>
+	
+	<select id="updateCheck" parameterType="Board" resultType="integer">
+		select count(b_id) from board2 where b_id = #{b_id} and b_pwd = #{b_pwd}
+	</select>
+	
+	<update id="updateBoard" parameterType="Board">
+		update board2 set b_name = #{b_name}, b_title =  #{b_title} , b_content = #{b_content} where b_id = #{b_id} and b_pwd = ${b_pwd}
+	</update>
+	
+	
+	
+	<!-- <select id="listBoard" resultType="Board" parameterType="Search">
+		select * from board
+		<if test="area != null">
+			<where>
+				<foreach collection="area" item="item" separator="or" open="("
+					close=")">
+					title Like %aa% or writer LIKE %aa%
+						${item} LIKE #{searchKey}
+				</foreach>
+			</where>
+		</if>
+	</select> -->
+
+	<!-- <select id="detailBoard" parameterType="int" resultType="Board">
+		select *
+		from board where seq = #{seq}
+	</select>
+
+	<update id="updateBoard" parameterType="Board">
+		update board
+		set title =
+		#{title}, contents = #{contents}
+		where seq = #{seq}
+	</update>
+
+	<delete id="deleteBoard" parameterType="Board">
+		delete from board
+		where
+		seq = #{seq}
+	</delete> -->
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,17 @@
+package kosta.model;
+
+public class BoardService {
+	private static BoardService service = new BoardService();
+	private static BoardDao dao;
+
+	
+	public static BoardService getInstance(){
+		dao = BoardDao.getInstance();
+		return service;
+	}
+	
+	public int insertBoardService(Board board){
+		board.setB_id(dao.selectB_id() + 1);
+		return dao.insertBoard(board);
+	}
+}

@@ -1,0 +1,15 @@
+package kosta.mapper;
+
+import java.util.List;
+
+import kosta.model.Board;
+
+public interface BoardMapper {
+	public int insertBoard(Board board);
+	public Integer selectB_id();
+	public List<Board> listBoard(Search search);
+	public Board selectBoard(int b_id);
+	public int updateHit(int b_id);
+	public int updateCheck(Board board);
+	public int updateBoard(Board board);
+}

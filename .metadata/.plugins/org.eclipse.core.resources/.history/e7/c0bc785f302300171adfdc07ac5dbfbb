@@ -1,0 +1,17 @@
+package kosta.action;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import kosta.model.BoardDao;
+
+public class insertAction implements Action {
+
+	@Override
+	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) {
+		BoardDao dao = BoardDao.getInstance();
+		dao.insertBoard(board);
+		return null;
+	}
+
+}

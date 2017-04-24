@@ -1,0 +1,15 @@
+주제선정 이유
+
+화면 설계
+
+html5 시멘틱 태그, div
+
+
+css 레이아웃
+(모 방 가 능)
+
+jquery, ajax
+(jsp 코드 만들때 html 지우고 <% List<Blog> list = newArrayList %> 안에 
+이런식으로 json 코드
+
+플러그인 찾아보기 or 만들기
